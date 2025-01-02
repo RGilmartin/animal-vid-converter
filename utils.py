@@ -66,7 +66,7 @@ def stitch_videos_in_folder(folder_path, output_path):
     print(os.listdir(folder_path))
     
     # Get all MP4 files in the folder
-    video_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if (f.endswith('.MP4'))]
+    video_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if f.endswith('.MP4') and 'compressed_' in f]
     print(video_files)
     # Ensure there are videos to stitch
     if len(video_files) < 2:
