@@ -1,3 +1,21 @@
-/dist/
-/build/
-video-converter.spec
+# Ignore build and distribution directories
+build/
+dist/
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment folders
+venv/
+env/
+
+# Ignore PyInstaller artifacts
+*.spec
+
+# Ignore logs and debug files
+*.log
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
