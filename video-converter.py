@@ -26,7 +26,7 @@ class FolderSelectorApp(QWidget):
 
         # Button to run conversion
         self.run_conversion_button = QPushButton("Run Conversion")
-        self.run_conversion_button.clicked.connect(self.run_conversion)
+        self.run_conversion_button.clicked.connect( self.run_conversion)
         self.layout.addWidget(self.run_conversion_button)
         self.setLayout(self.layout)
 
@@ -52,7 +52,11 @@ class FolderSelectorApp(QWidget):
             print(f"files: {self.mp4_files}")
             
             #compress files
-            compress_files(self.mp4_files['animal1'])
+            
+            for key in self.mp4_files:
+                print(key)
+                compress_files(self.mp4_files[key])
+                
             self.label.setText("conversion finished")
             
         else:

@@ -45,11 +45,48 @@ def compress_files(files):
                 subprocess.call(command, shell=True)
                 
                 print(f"Conversion successful: {output_file}")
+                pass
             except ffmpeg.Error as e:
                 print(f"Error during conversion: {e}")
                 success = False
             except Exception as e:
                 print(f"An unexpected error occurred: {str(e)}")
                 success = False
+    
+        dir, filename = os.path.split(files[0])
+        stitch_videos_in_folder(dir,os.path.dirname(dir))
                 
     return success
+
+def stitch_videos_in_folder(folder_path, output_path):
+    # Ensure the folder exists
+    if not os.path.exists(folder_path):
+        raise FileNotFoundError(f"Folder not found: {folder_path}")
+    
+    print(os.listdir(folder_path))
+    
+    # Get all MP4 files in the folder
+    video_files = [os.path.join(folder_path, f) for f in os.listdir(folder_path) if (f.endswith('.MP4'))]
+    print(video_files)
+    # Ensure there are videos to stitch
+    if len(video_files) < 2:
+        raise ValueError("At least two videos are required to stitch.")
+
+    # Create a temporary file to list the videos
+    concat_file = os.path.join(folder_path, "concat_list.txt")
+    with open(concat_file, "w") as f:
+        for video in video_files:
+            f.write(f"file '{video}'\n")
+    
+    # Use FFmpeg to stitch videos
+    try:
+        print(ffmpeg.input(concat_file, format="concat", safe=0).output(output_path, c="copy").compile())
+        command = ['ffmpeg', '-f', 'concat', '-safe', '0', '-i', f'{folder_path}\\concat_list.txt', '-c', 'copy', f'{output_path}\\{os.path.basename(folder_path)}.mp4']
+        subprocess.call(command, shell=True)
+        print(f"Successfully stitched videos into: {output_path}")
+    except ffmpeg.Error as e:
+        print(f"FFmpeg error: {e.stderr.decode()}")
+    finally:
+        # Clean up the temporary concat file
+        if os.path.exists(concat_file):
+            os.remove(concat_file)
