@@ -17,6 +17,9 @@ def collect_mp4(base_dir):
             #skip base folder, only process subfolders
             if root == base_dir:
                 continue
+            #skip empty folders
+            if not files:
+                continue
             #add mp4 files to list
             abs_files = []
             for file in files: 
